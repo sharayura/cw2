@@ -15,10 +15,10 @@ public class Main {
                             UserMenu.inputTask(scanner);
                             break;
                         case 2:
-                            // todo: обрабатываем пункт меню 2
+                            UserMenu.removeTask(scanner);
                             break;
                         case 3:
-                            // todo: обрабатываем пункт меню 3
+                            UserMenu.findTask(scanner);
                             break;
                         case 0:
                             break label;
