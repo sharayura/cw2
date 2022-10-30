@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -5,13 +6,13 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             label:
             while (true) {
-                printMenu();
+                UserMenu.printMenu();
                 System.out.print("Выберите пункт меню: ");
                 if (scanner.hasNextInt()) {
                     int menu = scanner.nextInt();
                     switch (menu) {
                         case 1:
-                            inputTask(scanner);
+                            UserMenu.inputTask(scanner);
                             break;
                         case 2:
                             // todo: обрабатываем пункт меню 2
@@ -28,20 +29,9 @@ public class Main {
                 }
             }
         }
-        catch(IllegalInputExeption e){
-
+        catch(IOException e){
+            System.out.println(e.getMessage());
         }
     }
 
-    private static void inputTask(Scanner scanner) {
-        System.out.print("Введите название задачи: ");
-        String taskName = scanner.next();
-        // todo
-    }
-
-    private static void printMenu() {
-        System.out.println("   1. Добавить задачу\n   2. Удалить задачу\n   3. Получить задачу на указанный день\n"
-                + "   0. Выход");
-
-    }
 }
