@@ -20,6 +20,12 @@ public class Main {
                         case 3:
                             UserMenu.findTask(scanner);
                             break;
+                        case 4:
+                            UserMenu.printDeletedTasks();
+                            break;
+                        case 5:
+                            UserMenu.groupTasksByDate(scanner);
+                            break;
                         case 0:
                             break label;
                     }

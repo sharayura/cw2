@@ -11,11 +11,17 @@ public class DayTask extends Task{
 
     @Override
     public LocalDateTime getNextTime() {
+        if (isDeleted()) {
+            return null;
+        }
         return getDeadline().plusDays(1);
     }
 
     @Override
-    public LocalDate getNextData(LocalDate localDate) {
+    public LocalDate getNextDate(LocalDate localDate) {
+        if (isDeleted()) {
+            return null;
+        }
         return localDate.plusDays(1);
     }
 

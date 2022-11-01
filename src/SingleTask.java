@@ -15,7 +15,7 @@ public class SingleTask extends Task {
     }
 
     @Override
-    public LocalDate getNextData(LocalDate localDate) {
+    public LocalDate getNextDate(LocalDate localDate) {
         return null;
     }
 

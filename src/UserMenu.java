@@ -91,6 +91,22 @@ public abstract class UserMenu {
         System.out.println();
     }
 
+    public static void printDeletedTasks() {
+        System.out.println("Список удаленных задач:");
+        TaskService.printDeletedTasks();
+    }
+
+    public static void groupTasksByDate(Scanner scanner) {
+        System.out.println("Введите дату начала периода:");
+        LocalDateTime localDateStart = getInputTime(scanner, false);
+        System.out.println("Введите дату конца периода:");
+        LocalDateTime localDateEnd = getInputTime(scanner, false);
+        while (localDateStart.isBefore(localDateEnd)) {
+            TaskService.printTasksByTime(localDateStart);
+            localDateStart = localDateStart.plusDays(1);
+        }
+    }
+
     private static LocalDateTime getInputTime(Scanner scanner, boolean hasHoursAndMinutes) {
         int year = LocalDate.now().getYear();
         year = checkInputInt(scanner, year, (year + 10),
@@ -121,6 +137,8 @@ public abstract class UserMenu {
                 "   1. Добавить задачу\n" +
                 "   2. Удалить задачу по id\n" +
                 "   3. Получить задачу на указанный день\n" +
+                "   4. Получить список удаленных задач\n" +
+                "   5. Сгруппировать задачи по датам (показать в промежутке двух дат)\n" +
                 "   0. Выход\n" +
                 "***************************");
 

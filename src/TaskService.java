@@ -15,17 +15,33 @@ public class TaskService {
     }
 
     public static void removeTaskFromCollection(Integer id) {
-        taskCollection.remove(id);
+        taskCollection.get(id).setDeleted();
     }
 
     public static void printTasksByTime(LocalDateTime time) {
         LocalDate localDate = LocalDate.from(time);
-        System.out.println("Задачи на " + localDate + ":");
+        int count = 0;
         for (Map.Entry<Integer, Task> taskEntry : taskCollection.entrySet()) {
             if (taskEntry.getValue().isTaskOnDay(localDate)) {
-                System.out.println("id=" + taskEntry.getKey() + " \"" + taskEntry.getValue().getTitle() + "\"");
+                if (count == 0) {
+                    System.out.println("Задачи на " + localDate + ":");
+                }
+                count++;
+                System.out.println("id=" + taskEntry.getKey() + " \"" + taskEntry.getValue().getTitle() + "\" - "
+                        + taskEntry.getValue().getRepeatType().getDescription());
             }
 
+        }
+        if (count == 0) {
+            System.out.println("На " + localDate + " нет задач");
+        }
+    }
+
+    public static void printDeletedTasks() {
+        for (Map.Entry<Integer, Task> taskEntry : taskCollection.entrySet()) {
+            if (taskEntry.getValue().isDeleted()) {
+                System.out.println("id=" + taskEntry.getKey() + "\"" + taskEntry.getValue().getTitle() + "\"");
+            }
         }
     }
 }

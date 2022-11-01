@@ -11,11 +11,17 @@ public class MonthTask extends Task {
 
     @Override
     public LocalDateTime getNextTime() {
+        if (isDeleted()) {
+            return null;
+        }
         return getDeadline().plusMonths(1);
     }
 
     @Override
-    public LocalDate getNextData(LocalDate localDate) {
+    public LocalDate getNextDate(LocalDate localDate) {
+        if (isDeleted()) {
+            return null;
+        }
         return localDate.plusMonths(1);
     }
 

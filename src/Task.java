@@ -11,6 +11,7 @@ public abstract class Task {
     private final Integer id = idCount;
     private TaskType taskType;
     private RepeatType repeatType;
+    private boolean isDeleted = false;
 
     public enum TaskType {
         TYPE_PRIVATE,
@@ -18,11 +19,21 @@ public abstract class Task {
     }
 
     public enum RepeatType {
-        REPEAT_SINGLE,
-        REPEAT_DAY,
-        REPEAT_WEEK,
-        REPEAT_MONTH,
-        REPEAT_YEAR
+        REPEAT_SINGLE("однократная"),
+        REPEAT_DAY("ежедневная"),
+        REPEAT_WEEK("еженедельная"),
+        REPEAT_MONTH("ежемесячная"),
+        REPEAT_YEAR("ежегодная");
+
+        private String description;
+
+        RepeatType(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
     public Task(String title, String description, LocalDateTime deadline, TaskType taskType) throws IOException {
@@ -43,6 +54,14 @@ public abstract class Task {
             this.taskType = taskType;
         }
         idCount++;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted() {
+        isDeleted = true;
     }
 
     public String getTitle() {
@@ -95,9 +114,9 @@ public abstract class Task {
 
     public abstract LocalDateTime getNextTime();
 
-    public abstract LocalDate getNextData(LocalDate localDate);
+    public abstract LocalDate getNextDate(LocalDate localDate);
     public Boolean isTaskOnDay(LocalDate localDate) {
-        if (deadline == null) {
+        if (isDeleted() || deadline == null) {
             return false;
         }
         LocalDate nextTime = LocalDate.from(deadline);
@@ -105,7 +124,7 @@ public abstract class Task {
             if (localDate.isEqual(nextTime)) {
                 return true;
             }
-            nextTime = getNextData(nextTime);
+            nextTime = getNextDate(nextTime);
         }
         return false;
     }

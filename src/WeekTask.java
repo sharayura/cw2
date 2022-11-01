@@ -11,11 +11,17 @@ public class WeekTask extends Task {
 
     @Override
     public LocalDateTime getNextTime() {
+        if (isDeleted()) {
+            return null;
+        }
         return getDeadline().plusWeeks(1);
     }
 
     @Override
-    public LocalDate getNextData(LocalDate localDate) {
+    public LocalDate getNextDate(LocalDate localDate) {
+        if (isDeleted()) {
+            return null;
+        }
         return localDate.plusWeeks(1);
     }
 
