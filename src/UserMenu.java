@@ -75,6 +75,7 @@ public abstract class UserMenu {
 
     public static void findTask(Scanner scanner, TaskService taskService) {
         System.out.println("Введите дату, на которую нужно найти все задачи.");
+        scanner.nextLine();
         LocalDateTime findTime = getInputTime(scanner, false);
         LocalDate localDate = LocalDate.from(findTime);
         System.out.println("Задачи на " + localDate + ":");
@@ -99,9 +100,19 @@ public abstract class UserMenu {
     }
 
     private static LocalDateTime getInputTime(Scanner scanner, boolean hasHoursAndMinutes) {
-        String dateTimeFormat = (hasHoursAndMinutes) ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd";
+        String dateTimeFormat = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        String input = checkInputLine(scanner, "Введите дату (время) в формате " + dateTimeFormat + ": " );
+        String hoursMins;
+        String message;
+        if (hasHoursAndMinutes) {
+            hoursMins = "";
+            message = "Введите дату и время в формате \"yyyy-MM-dd HH:mm\": ";
+        } else {
+            hoursMins = " 00:00";
+            message = "Введите дату в формате \"yyyy-MM-dd\": ";
+        }
+        String input = checkInputLine(scanner, message );
+        input += hoursMins;
         LocalDateTime dateTime = LocalDateTime.parse(input, formatter);
         return dateTime;
     }
