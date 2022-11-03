@@ -6,10 +6,10 @@ public abstract class Task {
 
     private String title;
     private String description;
-    private LocalDateTime deadline;
+    private final LocalDateTime deadline;
     private static int idCount = 0;
     private final Integer id = idCount;
-    private TaskType taskType;
+    private final TaskType taskType;
     private RepeatType repeatType;
 
     public enum TaskType {
@@ -79,14 +79,6 @@ public abstract class Task {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
     }
 
     public void setRepeatType(RepeatType repeatType) {

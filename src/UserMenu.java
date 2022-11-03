@@ -1,16 +1,19 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
 public abstract class UserMenu {
-    public static void inputTask(Scanner scanner) throws IOException {
+    public static void inputTask(Scanner scanner, TaskService taskService) throws IOException {
         scanner.nextLine();                              // почему-то без этого работает некорректно
         String taskTitle = checkInputLine(scanner, "Введите заголовок задачи: ");
         String taskDescription = checkInputLine(scanner, "Введите описание задачи: ");
 
         LocalDateTime taskTime = getInputTime(scanner, true);
+        System.out.println(taskTime); ////
 
         int input = checkInputInt(scanner, 1, 2,
                 "Выберете тип задачи (1 - личная, 2 - рабочая): ");
@@ -40,7 +43,7 @@ public abstract class UserMenu {
             case 5:
                 newTask = new YearTask(taskTitle, taskDescription, taskTime, taskType);
         }
-        TaskService.addTaskToCollection(newTask);
+        taskService.addTaskToCollection(newTask);
         System.out.println("Задача id=" + newTask.getId() + ", \"" + newTask.getTitle() + "\" добавлена!");
         System.out.println();
     }
@@ -70,15 +73,19 @@ public abstract class UserMenu {
         }
     }
 
-    public static void findTask(Scanner scanner) {
+    public static void findTask(Scanner scanner, TaskService taskService) {
         System.out.println("Введите дату, на которую нужно найти все задачи.");
         LocalDateTime findTime = getInputTime(scanner, false);
-        TaskService.printTasksByTime(findTime);
+        LocalDate localDate = LocalDate.from(findTime);
+        System.out.println("Задачи на " + localDate + ":");
+        for (Task task : taskService.tasksByTime(localDate)) {
+            System.out.println("id=" + task.getId() + " \"" + task.getTitle() + "\"");
+        }
         System.out.println();
     }
 
-    public static void removeTask(Scanner scanner) {
-        int collectionSize = TaskService.getCollectionSize();
+    public static void removeTask(Scanner scanner, TaskService taskService) {
+        int collectionSize = taskService.getCollectionSize();
         if (collectionSize == 0) {
             System.out.println("Не добавлено ни одной задачи!");
             System.out.println();
@@ -86,34 +93,17 @@ public abstract class UserMenu {
         }
         int id = checkInputInt(scanner, 0, collectionSize - 1,
                 "Напишите id задачи, которую нужно удалить: ");
-        TaskService.removeTaskFromCollection(id);
+        taskService.removeTaskFromCollection(id);
         System.out.println("Задача id=" + id + " удалена!");
         System.out.println();
     }
 
     private static LocalDateTime getInputTime(Scanner scanner, boolean hasHoursAndMinutes) {
-        int year = LocalDate.now().getYear();
-        year = checkInputInt(scanner, year, (year + 10),
-                "Введите год (в диапазоне 10 лет от нынешнего): ");
-
-        int month = checkInputInt(scanner, 1, 12,
-                "Введите номер месяца (от 1 до 12): ");
-
-        Calendar calendar = (Calendar) Calendar.getInstance().clone();
-        calendar.set(year, (month - 1), 1);
-        int maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int day = checkInputInt(scanner, 1, maxDay,
-                "Введите число месяца (от 1 до " + maxDay + " ):");
-        int hours = 0;
-        int minutes = 0;
-
-        if (hasHoursAndMinutes) {
-            hours = checkInputInt(scanner, 0, 23,
-                    "Введите час (от 0 до 23): ");
-            minutes = checkInputInt(scanner, 0, 59,
-                    "Введите минуты (от 0 до 59): ");
-        }
-        return LocalDateTime.of(year, month, day, hours, minutes);
+        String dateTimeFormat = (hasHoursAndMinutes) ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        String input = checkInputLine(scanner, "Введите дату (время) в формате " + dateTimeFormat + ": " );
+        LocalDateTime dateTime = LocalDateTime.parse(input, formatter);
+        return dateTime;
     }
 
     public static void printMenu() {

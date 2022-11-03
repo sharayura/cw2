@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        TaskService taskService = new TaskService();
         try (Scanner scanner = new Scanner(System.in)) {
             label:
             while (true) {
@@ -12,13 +13,13 @@ public class Main {
                     int menu = scanner.nextInt();
                     switch (menu) {
                         case 1:
-                            UserMenu.inputTask(scanner);
+                            UserMenu.inputTask(scanner, taskService);
                             break;
                         case 2:
-                            UserMenu.removeTask(scanner);
+                            UserMenu.removeTask(scanner, taskService);
                             break;
                         case 3:
-                            UserMenu.findTask(scanner);
+                            UserMenu.findTask(scanner, taskService);
                             break;
                         case 0:
                             break label;
