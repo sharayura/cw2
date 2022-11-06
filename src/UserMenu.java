@@ -2,8 +2,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.List;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public abstract class UserMenu {
@@ -12,8 +11,16 @@ public abstract class UserMenu {
         String taskTitle = checkInputLine(scanner, "Введите заголовок задачи: ");
         String taskDescription = checkInputLine(scanner, "Введите описание задачи: ");
 
-        LocalDateTime taskTime = getInputTime(scanner, true);
-        System.out.println(taskTime); ////
+        boolean isInputRight = false;
+        LocalDateTime taskTime = null;
+        while (!isInputRight) {
+            try {
+                taskTime = getInputTime(scanner, true);
+                isInputRight = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Вы ввели неправильно, попробуйте еще раз!");
+            }
+        }
 
         int input = checkInputInt(scanner, 1, 2,
                 "Выберете тип задачи (1 - личная, 2 - рабочая): ");
@@ -111,7 +118,7 @@ public abstract class UserMenu {
             hoursMins = " 00:00";
             message = "Введите дату в формате \"yyyy-MM-dd\": ";
         }
-        String input = checkInputLine(scanner, message );
+        String input = checkInputLine(scanner, message);
         input += hoursMins;
         LocalDateTime dateTime = LocalDateTime.parse(input, formatter);
         return dateTime;
